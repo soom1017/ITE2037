@@ -105,13 +105,12 @@ public class Schedule {
 		this.plan[time-9][day-1] = new Activity(act);
 	}
 	
-	public int removeActivity(int day, int time) {
-		//해당 날짜와 시간에 일정이 존재하면 삭제
-		if(this.plan[time-9][day-1] != null) {
-			this.plan[time-9][day-1] = null;
-			return 1;
+	public void removeActivity(int day, int time) throws InvalidAccessException {
+		//해당 날짜와 시간에 일정이 존재하는지 확인
+		if(this.plan[time-9][day-1] == null) {
+			throw new InvalidAccessException("no activity exists at that time.");
 		}
-		else return 0;
+		this.plan[time-9][day-1] = null;
 	}
 	
 	public void calExpense() {

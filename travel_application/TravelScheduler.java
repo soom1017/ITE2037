@@ -97,7 +97,7 @@ public class TravelScheduler {
 					int num = keyboard.nextInt();
 					
 					if(num > Schedule.scheduleNum)
-						throw new InvalidAccessException("**INVALID ACCESS: it's an EMPTY schedule.**");
+						throw new InvalidAccessException("it's an EMPTY schedule.");
 					
 					if(num != 0 && num <= Schedule.scheduleNum) {
 						System.out.print("\n1)Add activity\n"
@@ -139,9 +139,13 @@ public class TravelScheduler {
 								int day = keyboard.nextInt();
 								System.out.print("Enter the time to remove activity: ");
 								int time = keyboard.nextInt();
-								
-								if(scheduleList[num-1].removeActivity(day, time) != 0)
+								try {
+									scheduleList[num-1].removeActivity(day, time);
 									System.out.println("Removed successfully");
+								}
+								catch(InvalidAccessException e) {
+									System.out.println(e.getMessage());
+								}
 							}
 							if(selectInput == 3) { // 3) Print schedule
 								scheduleList[num-1].printPlan();
@@ -168,7 +172,7 @@ public class TravelScheduler {
 				if(editInput == 1) { // 1) Make a new schedule
 					try {
 						if(Schedule.scheduleNum > scheduleList.length) // Schedule list를 초과해서 schedule 생성하려 할 경우
-							throw new ArrayFullException("**FULL ARRAY: too many schedule.**");
+							throw new ArrayFullException("too many schedule.");
 						
 						System.out.print("Enter a name for the schedule: ");
 						String temp = keyboard.nextLine();
