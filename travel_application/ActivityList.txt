@@ -1,0 +1,11 @@
+10
+Activity, Hiking, Mountain, 0
+Activity, Horse Riding, Hill, 3000
+Show, Concert, Concert Hall, 8000, 15
+Show, Watching movie, Theater, 11000, 12
+Activity, Fishing, Sea, 15000
+Activity, Surfing, Beach, 20000
+Activity, Camping, Field, 30000
+Extreme, Rope Sliding, Mountain, 40000, 120, 30
+Extreme, Paragliding, Mountain, 50000, 130, 50
+Extreme, Bungee Jumping, Mountain, 60000, 150, 40

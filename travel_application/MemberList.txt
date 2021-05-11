@@ -1,0 +1,6 @@
+5
+John Smith, 65, 181, 78
+Peter Anderson, 30, 174, 68
+Jenny Allen, 28, 167, 58
+Peter Coolidge, 13, 150, 45
+Kevin, 8, 125, 25

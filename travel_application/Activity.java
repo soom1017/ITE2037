@@ -1,4 +1,4 @@
-package assignment1;
+package assignment2;
 
 public class Activity {
 	private String name;
@@ -52,4 +52,10 @@ public class Activity {
 					&& this.getPrice() == activity.getPrice();
 		}
 	}
+	
+	//etc
+	public int getActualPrice(Person person) {
+		return this.getPrice();
+	}
 }
+
