@@ -50,17 +50,18 @@ public class TravelScheduler {
 			String location = activityInfo[2];
 			int price = Integer.parseInt(activityInfo[3]);
 			
-			if(activityInfo[0] == "Extreme") {
+			if(activityInfo[0].equals("Extreme")) {
 				int minHeight = Integer.parseInt(activityInfo[4]);
 				int minWeight = Integer.parseInt(activityInfo[5]);
 				activityList[i] = new ExtremeActivity(name, location, price, minHeight, minWeight);
 			}
-			else if(activityInfo[0] == "Show") {
+			else if(activityInfo[0].equals("Show")) {
 				int minAge = Integer.parseInt(activityInfo[4]);
 				activityList[i] = new ShowActivity(name, location, price, minAge);
 			}
-			else
+			else {
 				activityList[i] = new Activity(name, location, price);
+			}
 		}
 		inputStream1.close();
 		
