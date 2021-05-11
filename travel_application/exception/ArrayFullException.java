@@ -5,6 +5,6 @@ public class ArrayFullException extends Exception {
 		super("**FULL ARRAY**");
 	}
 	public ArrayFullException(String message) {
-		super(message);
+		super("**FULL ARRAY: " + message + "**");
 	}
 }

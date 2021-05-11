@@ -5,6 +5,6 @@ public class InsufficientConditionException extends Exception {
 		super("**INSUFFICIENT CONDITION: please select again.**");
 	}
 	public InsufficientConditionException(String message) {
-		super(message);
+		super("**INSUFFICIENT CONDITION: " + message + "**");
 	}
 }

@@ -5,6 +5,6 @@ public class InvalidAccessException extends Exception {
 		super("**INVALID ACCESS: please select again.**");
 	}
 	public InvalidAccessException(String message) {
-		super(message);
+		super("**INVALID ACCESS: " + message + "**");
 	}
 }
