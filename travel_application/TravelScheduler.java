@@ -1,6 +1,8 @@
 package assignment2;
 
 import java.util.Scanner;
+import java.util.InputMismatchException;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import assignment2.exception.*;
@@ -16,7 +18,7 @@ public class TravelScheduler {
 				System.out.println((i+1) + ") EMPTY SCHEDULE"); // schedule list - empty schedule 가능
 		}
 	}
-
+	
 	public static void main(String[] args) {
 		//file 읽기
 		Scanner inputStream1 = null;
@@ -86,15 +88,43 @@ public class TravelScheduler {
 						+ "2)Edit schedule\n"
 						+ "3)End program\n"
 						+ "Select menu: ");
+		
 		Scanner keyboard = new Scanner(System.in);
-		int mainInput = keyboard.nextInt();
+		int mainInput;
+		while(true) {
+			try {
+				mainInput = keyboard.nextInt();
+				if(mainInput > 3 || mainInput < 0) {
+					throw new InvalidAccessException();
+				}
+				break;
+			}
+			catch(InputMismatchException e) {
+				keyboard = new Scanner(System.in);
+				System.out.print("**INPUT MISMATCH: please select again.**" + "\nSelect menu: ");
+			}
+			catch(InvalidAccessException e) {
+				keyboard = new Scanner(System.in);
+				System.out.print(e.getMessage() + "\nSelect menu: ");
+			}
+		}
 		
 		while(mainInput != 3) {
 			if(mainInput == 1) { //1) select schedule
 				try {
 					printList(scheduleList);
 					System.out.print("Select a schedule: ");
-					int num = keyboard.nextInt();
+					int num;
+					while(true) {
+						try {
+							num = keyboard.nextInt();
+							break;
+						}
+						catch(InputMismatchException e) {
+							keyboard = new Scanner(System.in);
+							System.out.println("**INPUT MISMATCH: please select again.**");
+						}
+					}
 					
 					if(num > Schedule.scheduleNum)
 						throw new InvalidAccessException("it's an EMPTY schedule.");
@@ -104,7 +134,24 @@ public class TravelScheduler {
 										+ "2)Remove activity\n"
 										+ "3)Print schedule\n"
 										+ "Select menu: ");
-						int selectInput = keyboard.nextInt();
+						int selectInput;
+						while(true) {
+							try {
+								selectInput = keyboard.nextInt();
+								if(selectInput < 0 || selectInput > 3) {
+									throw new InvalidAccessException();
+								}
+								break;
+							}
+							catch(InputMismatchException e) {
+								keyboard = new Scanner(System.in);
+								System.out.print("**INPUT MISMATCH: please select again.**" + "\nSelect menu: ");
+							}
+							catch(InvalidAccessException e) {
+								keyboard = new Scanner(System.in);
+								System.out.print(e.getMessage() + "\nSelect menu: ");
+							}
+						}
 						
 						while(selectInput != 0) { 
 							if(selectInput == 1) { // 1) Add activity
@@ -122,10 +169,10 @@ public class TravelScheduler {
 										break;
 									} 
 									catch(InsufficientConditionException e) {
-										System.out.println(e.getMessage());
+										System.out.println("Fail to add activity\n" + e.getMessage());
 									} 
 									catch(InvalidAccessException e) {
-										System.out.println(e.getMessage());
+										System.out.println("Fail to add activity\n" + e.getMessage());
 									} 
 									catch(Exception e) {
 										System.out.println("Fail to add activity");
@@ -154,7 +201,23 @@ public class TravelScheduler {
 											+ "2)Remove activity\n"
 											+ "3)Print schedule\n"
 											+ "Select menu: ");
-							selectInput = keyboard.nextInt();
+							while(true) {
+								try {
+									selectInput = keyboard.nextInt();
+									if(selectInput > 3 || selectInput < 0) {
+										throw new InvalidAccessException();
+									}
+									break;
+								}
+								catch(InputMismatchException e) {
+									keyboard = new Scanner(System.in);
+									System.out.print("**INPUT MISMATCH: please select again.**" + "\nSelect menu: ");
+								}
+								catch(InvalidAccessException e) {
+									keyboard = new Scanner(System.in);
+									System.out.print(e.getMessage() + "\nSelect menu: ");
+								}
+							}
 						}
 					}
 				}
@@ -167,11 +230,28 @@ public class TravelScheduler {
 				System.out.print("\n1)Make a new schedule\n"
 								+ "2)Copy an existing schedule\n"
 								+ "Select menu: ");
-				int editInput = keyboard.nextInt();
+				int editInput;
+				while(true) {
+					try {
+						editInput = keyboard.nextInt();
+						if(editInput > 2 || editInput < 0) {
+							throw new InvalidAccessException();
+						}
+						break;
+					}
+					catch(InputMismatchException e) {
+						keyboard = new Scanner(System.in);
+						System.out.print("**INPUT MISMATCH: please select again.**" + "\nSelect menu: ");
+					}
+					catch(InvalidAccessException e) {
+						keyboard = new Scanner(System.in);
+						System.out.print(e.getMessage() + "\nSelect menu: ");
+					}
+				}
 				
 				if(editInput == 1) { // 1) Make a new schedule
 					try {
-						if(Schedule.scheduleNum > scheduleList.length) // Schedule list를 초과해서 schedule 생성하려 할 경우
+						if(Schedule.scheduleNum >= scheduleList.length) // Schedule list를 초과해서 schedule 생성하려 할 경우
 							throw new ArrayFullException("too many schedule.");
 						
 						System.out.print("Enter a name for the schedule: ");
@@ -210,25 +290,32 @@ public class TravelScheduler {
 				}
 				
 				if(editInput == 2) { // 2) Copy an existing schedule
-					while(true) {
-						printList(scheduleList);					
-						System.out.print("Select the schedule to copy: ");
-						try {
-							int num = keyboard.nextInt();
-							if(num > Schedule.scheduleNum || num < 1) // 존재하지 않는 schedule을 고른 경우
-								throw new InvalidAccessException();
-							System.out.print("Enter a new schedule name: ");
-							String temp = keyboard.nextLine();
-							String scheduleName = keyboard.nextLine();
-						
-							scheduleList[Schedule.scheduleNum] = new Schedule(scheduleList[--num]);
-							scheduleList[Schedule.scheduleNum++].setName(scheduleName);
+					try {
+						if(Schedule.scheduleNum >= scheduleList.length) // Schedule list를 초과해서 schedule 생성(복제)하려 할 경우
+							throw new ArrayFullException("too many schedule.");
+						while(true) {
+							printList(scheduleList);					
+							System.out.print("Select the schedule to copy: ");
+							try {
+								int num = keyboard.nextInt();
+								if(num > Schedule.scheduleNum || num < 1) // 존재하지 않는 schedule을 고른 경우
+									throw new InvalidAccessException();
+								System.out.print("Enter a new schedule name: ");
+								String temp = keyboard.nextLine();
+								String scheduleName = keyboard.nextLine();
 							
-							break;
+								scheduleList[Schedule.scheduleNum] = new Schedule(scheduleList[--num]);
+								scheduleList[Schedule.scheduleNum++].setName(scheduleName);
+								
+								break;
+							}
+							catch(InvalidAccessException e) {
+								System.out.println(e.getMessage());
+							}
 						}
-						catch(InvalidAccessException e) {
-							System.out.println(e.getMessage());
-						}
+					}
+					catch(ArrayFullException e) {
+						System.out.println(e.getMessage());
 					}
 				}
 			}
@@ -236,7 +323,23 @@ public class TravelScheduler {
 							+ "2)Edit schedule\n"
 							+ "3)End program\n"
 							+ "Select menu: ");
-			mainInput = keyboard.nextInt();
+			while(true) {
+				try {
+					mainInput = keyboard.nextInt();
+					if(mainInput > 3 || mainInput < 0) {
+						throw new InvalidAccessException();
+					}
+					break;
+				}
+				catch(InputMismatchException e) {
+					keyboard = new Scanner(System.in);
+					System.out.print("**INPUT MISMATCH: please select again.**" + "\nSelect menu: ");
+				}
+				catch(InvalidAccessException e) {
+					keyboard = new Scanner(System.in);
+					System.out.print(e.getMessage() + "\nSelect menu: ");
+				}
+			}
 		}
 		keyboard.close();
 	}

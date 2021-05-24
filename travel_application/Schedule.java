@@ -41,8 +41,18 @@ public class Schedule {
 		this.plan = new Activity[12][this.days];
 		for(int i=0;i<12;i++) {
 			for(int j=0;j<this.days;j++) {
-				if(anotherSchedule.plan[i][j] != null)
-					this.plan[i][j] = new Activity(anotherSchedule.plan[i][j]);
+				if(anotherSchedule.plan[i][j] != null) {
+					if(anotherSchedule.plan[i][j].getClass().getCanonicalName() == "assignment2.ExtremeActivity") {
+						ExtremeActivity extremeAct = (ExtremeActivity)anotherSchedule.plan[i][j];
+						this.plan[i][j] = new ExtremeActivity(extremeAct);
+					}
+					else if(anotherSchedule.plan[i][j].getClass().getCanonicalName() == "assignment2.ShowActivity") {
+						ShowActivity showAct = (ShowActivity)anotherSchedule.plan[i][j];
+						this.plan[i][j] = new ShowActivity(showAct);
+					}
+					else
+						this.plan[i][j] = new Activity(anotherSchedule.plan[i][j]);
+				}	
 			}
 		}
 		this.expense = anotherSchedule.expense;
@@ -75,21 +85,6 @@ public class Schedule {
 	
 	//etc
 	public void addActivity(Activity act, int day, int time) throws Exception {
-		//모든 멤버가 가능한 activity인지
-		if(act.getClass().getCanonicalName() == "assignment2.ExtremeActivity") {
-			ExtremeActivity extremeAct = (ExtremeActivity)act;
-			for(Person person: member) {
-				if(person.getHeight() < extremeAct.getMinHeight() || person.getWeight() < extremeAct.getMinWeight())
-					throw new InsufficientConditionException();
-			}
-		}
-		if(act.getClass().getCanonicalName() == "assignment2.ShowActivity") {
-			ShowActivity showAct = (ShowActivity)act;
-			for(Person person: member) {
-				if(person.getAge() < showAct.getMinAge())
-					throw new InsufficientConditionException();
-			}
-		}
 		//이미 일정에 존재하는 activity인지
 		for(int i=0;i<12;i++) {
 			for(int j=0;j<this.days;j++) {
@@ -102,7 +97,31 @@ public class Schedule {
 		if(this.plan[time-9][day-1] != null) {
 			throw new InvalidAccessException();	
 		}
-		this.plan[time-9][day-1] = new Activity(act);
+		
+		//모든 멤버가 최소 조건을 맞추는지 - extremeActivity인 경우
+		if(act.getClass().getCanonicalName() == "assignment2.ExtremeActivity") {
+			ExtremeActivity extremeAct = (ExtremeActivity)act;
+			for(Person person: member) {
+				if(person.getHeight() < extremeAct.getMinHeight() || person.getWeight() < extremeAct.getMinWeight())
+					throw new InsufficientConditionException();
+			}
+			if(extremeAct != null)
+				this.plan[time-9][day-1] = new ExtremeActivity(extremeAct);
+		}
+		
+		//모든 멤버가 최소 조건을 맞추는지 - showActivity인 경우
+		else if(act.getClass().getCanonicalName() == "assignment2.ShowActivity") {
+			ShowActivity showAct = (ShowActivity)act;
+			for(Person person: member) {
+				if(person.getAge() < showAct.getMinAge())
+					throw new InsufficientConditionException();
+			}
+			if(showAct != null)
+				this.plan[time-9][day-1] = new ShowActivity(showAct);
+		}
+		
+		else
+			this.plan[time-9][day-1] = new Activity(act);
 	}
 	
 	public void removeActivity(int day, int time) throws InvalidAccessException {

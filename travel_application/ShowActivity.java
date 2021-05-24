@@ -11,8 +11,27 @@ public class ShowActivity extends Activity {
 		this.minAge = minAge;
 	}
 	
+	//copy-constructor
+	public ShowActivity(ShowActivity act) {
+		super(act.getName(), act.getLocation(), act.getPrice());
+		this.minAge = act.minAge;
+	}
+	
 	public int getMinAge() {
 		return this.minAge;
+	}
+	
+	public boolean equals(Object obj) {
+		if(obj == null)
+			return false;
+		else if(getClass() != obj.getClass())
+			return false;
+		else {
+			ShowActivity activity = (ShowActivity)obj;
+			return this.getName() == activity.getName() 
+					&& this.getLocation() == activity.getLocation() 
+					&& this.getPrice() == activity.getPrice();
+		}
 	}
 	
 	public int getActualPrice(Person person) {
