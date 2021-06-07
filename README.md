@@ -1,19 +1,19 @@
 # FRONT-END
-## html(완료)
+### html(완료)
 [reference](https://developer.mozilla.org/ko/)
 
-## css
+### css
 [reference](https://www.codingfactory.net/)
 * text, table
 * box model
 * layout
 * animation   
 
-### bootstrap(예정)
+#### bootstrap(예정)
 >https://getbootstrap.com/
 
-## js   
+### js   
 
 # BACK-END
-## django
+### django
 
