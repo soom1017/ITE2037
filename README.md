@@ -1,8 +1,7 @@
 # FRONT-END
-## html
+## html(완료)
 [reference](https://developer.mozilla.org/ko/)
-* 완료   
-***
+
 ## css
 [reference](https://www.codingfactory.net/)
 * text, table
@@ -12,9 +11,8 @@
 
 ### bootstrap(예정)
 >https://getbootstrap.com/
-***
+
 ## js   
-/
 
 # BACK-END
 ## django
