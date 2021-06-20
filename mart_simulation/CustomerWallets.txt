@@ -1,0 +1,9 @@
+3
+CustomerA, 2
+Credit, Hanyang bank, 1000000, 350000 
+Cash, KRW, 50000
+CustomerB, 1
+Cash, KRW, 120000
+CustomerC, 2
+Cash, KRW, 10000
+Credit, Hanyang bank, 300000, 290000

@@ -1,0 +1,11 @@
+10
+Food, Onion, 2000, 2021, 6, 13, 13, 00, 10
+Food, Orange, 3000, 2021, 6, 3, 12, 00, 5
+Food, Egg, 3000, 2021, 6, 1, 20, 00,20
+Food, Garlic, 2000, 2021, 6, 5, 10, 00, 0
+Food, Tofu, 2000, 2021, 5, 19, 22, 00, 5 
+Manufactured, Knife, 30000, Hanyang, 3 
+Manufactured, Chopping board, 20000, Hanyang, 3 
+Manufactured, Towel, 5000, ITBT, 5
+Manufactured, Cup, 9000, ITBT, 1
+Manufactured, Monitor, 100000, ITBT, 2
