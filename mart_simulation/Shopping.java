@@ -29,6 +29,7 @@ public class Shopping {
 		ArrayList<Customer> customerList = new ArrayList<Customer>();
 
 		Mart.getIstance();
+		InventoryManager manager = Mart.getIstance();
 		
 		Scanner inputStream1 = null;
 		Scanner inputStream2 = null;
@@ -55,7 +56,7 @@ public class Shopping {
 			String customerName = customerInfo[0];
 			int payableNum = Integer.parseInt(customerInfo[1]);
 			
-			Customer customer = new Customer(customerName);
+			Customer customer = new Customer(customerName, manager);
 			customerList.add(customer);
 			
 			for(int j=0;j<payableNum;j++) {
@@ -164,7 +165,7 @@ public class Shopping {
 						while(true) {
 							try {
 								num = keyboard.nextInt();
-								if(num > productNum)
+								if(num > productNum || num < 1)
 									throw new InvalidAccessException();
 								break;
 							}
@@ -260,37 +261,48 @@ public class Shopping {
 				
 				while(customerModeInput != 0) {
 					if(customerModeInput == 1) { // 1) Shopping
-						printList(Mart.getIstance().getSalesList());
-						System.out.print("Select Product: ");
-						int num;
+						//0 입력 시까지 반복
 						while(true) {
-							try {
-								num = keyboard.nextInt();
-								if(num > productNum)
-									throw new InvalidAccessException();
+							//물품과 수량 입력
+							printList(Mart.getIstance().getSalesList());
+							System.out.print("Select Product(0 for exit): ");
+							int num;
+							while(true) {
+								try {
+									num = keyboard.nextInt();
+									if(num > productNum || num < 0)
+										throw new InvalidAccessException();
+									break;
+								}
+								catch(InputMismatchException e) {
+									keyboard = new Scanner(System.in);
+									System.out.print("**INPUT MISMATCH: please select again.**" + "\nSelect Product(0 for exit): ");
+								}
+								catch(InvalidAccessException e) {
+									keyboard = new Scanner(System.in);
+									System.out.print(e.getMessage() + "\nSelect Product(0 for exit): ");
+								}
+							}
+							if(num == 0)
 								break;
+							
+							System.out.print("Enter quantity: ");
+							int wantedQuantity = keyboard.nextInt();
+							
+							//선택한 물품 카트에 담고, mart의 product 수량 감소
+							Product p = Mart.getIstance().getSalesList().get(num - 1);
+							try {
+								if(p.getClass().getCanonicalName().equals("assignment3.Food")) {
+									Food food = (Food)p;
+									if(food.isExpired(present)) //유효기간 지난 경우
+										throw new ExpiredException();
+								}
+								customerList.get(customerIndex - 1).addProductToCart(p, wantedQuantity);
+								Mart.getIstance().decreaseProductQuantity(num - 1, wantedQuantity);
 							}
-							catch(InputMismatchException e) {
-								keyboard = new Scanner(System.in);
-								System.out.print("**INPUT MISMATCH: please select again.**" + "\nSelect Product: ");
+							catch(ExpiredException e) {
+								System.out.println(e.getMessage());
 							}
-							catch(InvalidAccessException e) {
-								keyboard = new Scanner(System.in);
-								System.out.print(e.getMessage() + "\nSelect Product: ");
-							}
-						}
-						System.out.print("Enter quantity: ");
-						int wantedQuantity = keyboard.nextInt();
-						
-						Product p = Mart.getIstance().getSalesList().get(num - 1);
-						try {
-							customerList.get(customerIndex - 1).addProductToCart(p, wantedQuantity, present);
-						}
-						catch(ExpiredException e) {
-							//to-do
-						}
-						catch(Exception e) {
-							//to-do
 						}
 					}
 					if(customerModeInput == 2) { // 2) Print Shopping Cart
@@ -322,21 +334,30 @@ public class Shopping {
 							}
 						}
 						//결제
-						customerList.get(customerIndex - 1).payProductsInCart(paymentNum - 1);
-						
-						//영수증 만들기
-						String fileName = "Receipt" + Mart.transactionNum + ".txt";
-						File receiptFile = new File(fileName);
-						PrintWriter outputStream = null;
 						try {
-							outputStream = new PrintWriter(new FileOutputStream(fileName));
+							customerList.get(customerIndex - 1).payProductsInCart(paymentNum - 1);
+							//영수증 생성
+							String fileName = "Receipt" + Mart.transactionNum + ".txt";
+							File receiptFile = new File(fileName);
+							Mart.transactionNum++;
+							
+							PrintWriter outputStream = null;
+							try {
+								outputStream = new PrintWriter(new FileOutputStream(fileName));
+							}
+							catch(FileNotFoundException e) {
+								System.out.println("Error opening the file " + fileName);
+								System.exit(0);
+							}
+							customerList.get(customerIndex - 1).printReceipt(outputStream, paymentNum - 1);
+							outputStream.close();
+							
+							//쇼핑카트 초기화
+							customerList.get(customerIndex - 1).setShoppingCart(new ArrayList<Product>());
 						}
-						catch(FileNotFoundException e) {
-							System.out.println("Error opening the file " + fileName);
-							System.exit(0);
+						catch(NotEnoughBalanceException e) {
+							//payProductsInCart에서 에러 메시지 표시. 가능한 Payable이 아예 없을 수도 있으므로 반복하지 않음.
 						}
-						customerList.get(customerIndex - 1).printReceipt(outputStream, paymentNum - 1);
-						outputStream.close();
 						
 					}
 					if(customerModeInput == 4) { // 4) Print Wallet

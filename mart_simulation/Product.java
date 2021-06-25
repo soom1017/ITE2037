@@ -29,4 +29,17 @@ public class Product {
 	public void addQuantity(int num) {
 		this.quantity += num;
 	}
+	
+	public boolean equals(Object obj) {
+		if(obj == null)
+			return false;
+		else if(this.getClass() != obj.getClass())
+			return false;
+		else {
+			Product p = (Product) obj;
+			if(this.getName().equals(p.getName()))
+				return true;
+			else return false;
+		}
+	}
 }

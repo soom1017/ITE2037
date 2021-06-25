@@ -10,8 +10,8 @@ public class Manufactured extends Product {
 		super(name, price, quantity);
 		this.brand = brand;
 	}
-	public Manufactured(Manufactured manufactured) {
-		super(manufactured.getName(), manufactured.getPrice(), manufactured.getQuantity());
+	public Manufactured(Manufactured manufactured, int wantedQuantity) {
+		super(manufactured.getName(), manufactured.getPrice(), wantedQuantity);
 		this.brand = manufactured.brand;
 	}
 	

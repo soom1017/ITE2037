@@ -13,6 +13,12 @@ public class Credit implements Payable {
 		this.amountUsed = amountUsed;
 	}
 	
+	public Credit(Credit credit) {
+		this.bank = credit.bank;
+		this.limit = credit.limit;
+		this.amountUsed = credit.amountUsed;
+	}
+	
 	public String getBank() {
 		return this.bank;
 	}
@@ -23,8 +29,10 @@ public class Credit implements Payable {
 	
 	@Override
 	public void pay(int price) throws NotEnoughBalanceException {
-		if(limit - amountUsed < price)
-			throw new NotEnoughBalanceException();
+		if(limit - amountUsed < price) {
+			String message = (this.limit - this.amountUsed) + " won left. This is not enough.";
+			throw new NotEnoughBalanceException(message);
+		}
 		amountUsed += price;
 		limit -= amountUsed;
 	}

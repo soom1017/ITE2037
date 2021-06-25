@@ -15,8 +15,8 @@ public class Food extends Product {
 		super(food.getName(), food.getPrice(), food.getQuantity());
 		this.expirationDateTime = updatedExpiration;
 	}
-	public Food(Food food) {
-		super(food.getName(), food.getPrice(), food.getQuantity());
+	public Food(Food food, int wantedQuantity) {
+		super(food.getName(), food.getPrice(), wantedQuantity);
 		this.expirationDateTime = food.expirationDateTime;
 	}
 	

@@ -11,6 +11,10 @@ public class Cash implements Payable {
 		this.currency = currency;
 		this.amount = amount;
 	}
+	public Cash(Cash cash) {
+		this.currency = cash.currency;
+		this.amount = cash.amount;
+	}
 	
 	public String toString() {
 		return this.currency + ", " + this.amount + " won";
@@ -18,8 +22,10 @@ public class Cash implements Payable {
 	
 	@Override
 	public void pay(int amount) throws NotEnoughBalanceException {
-		if(this.amount < amount)
-			throw new NotEnoughBalanceException();
+		if(this.amount < amount) {
+			String message = this.amount + " won is not enough.";
+			throw new NotEnoughBalanceException(message);
+		}	
 		this.amount -= amount;
 	}
 }
